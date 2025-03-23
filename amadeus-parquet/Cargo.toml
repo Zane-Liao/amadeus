@@ -50,3 +50,6 @@ rustversion = "1.0"
 [[test]]
 name = "derive"
 test = false
+
+[lints.rust]
+ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }

@@ -64,7 +64,7 @@ where
 	fn query(f: &mut fmt::Formatter, name: Option<&Names<'_>>) -> fmt::Result;
 	fn decode(
 		type_: &::postgres::types::Type, buf: Option<&[u8]>,
-	) -> Result<Self, Box<dyn std::error::Error + Sync + Send>>;
+	) -> Result<Self, Box<dyn error::Error + Sync + Send>>;
 }
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -166,7 +166,7 @@ impl From<postgres::config::Config> for ConnectParams {
 	}
 }
 impl str::FromStr for ConnectParams {
-	type Err = Box<dyn std::error::Error + 'static + Send + Sync>;
+	type Err = Box<dyn error::Error + 'static + Send + Sync>;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
 		let params: postgres::config::Config = s.parse()?;
@@ -214,7 +214,7 @@ where
 }
 
 #[cfg(not(nightly))]
-type Output<Row: PostgresData> = Pin<Box<dyn Stream<Item = Result<Row, PostgresError>> + Send>>;
+type Output<Row> = Pin<Box<dyn Stream<Item = Result<Row, PostgresError>> + Send>>;
 #[cfg(nightly)]
 type Output<Row: PostgresData> = impl Stream<Item = Result<Row, PostgresError>> + Send;
 
@@ -402,7 +402,7 @@ pub fn read_be_i32(buf: &mut &[u8]) -> io::Result<i32> {
 
 pub fn read_value<T>(
 	type_: &::postgres::types::Type, buf: &mut &[u8],
-) -> Result<T, Box<dyn std::error::Error + Sync + Send>>
+) -> Result<T, Box<dyn error::Error + Sync + Send>>
 where
 	T: PostgresData,
 {

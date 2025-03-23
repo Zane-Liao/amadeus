@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::{
-	borrow::Cow, cmp::Ordering, collections::HashMap, fmt::Debug, hash::{BuildHasher, Hash, Hasher}, mem
+	borrow::Cow, cmp::Ordering, collections::HashMap, fmt::Debug, hash::{BuildHasher, Hash, Hasher}
 };
 
 #[cfg(feature = "parquet")]
@@ -36,7 +36,7 @@ pub trait Data:
 	+ 'static
 {
 	fn size(&self) -> usize {
-		mem::size_of::<Self>() + self.heap()
+		size_of::<Self>() + self.heap()
 	}
 	fn heap(&self) -> usize;
 	fn cast<D: Data>(self) -> Result<D, CastError> {
@@ -74,7 +74,7 @@ where
 	T: Data,
 {
 	fn heap(&self) -> usize {
-		mem::size_of::<T>() + (**self).heap()
+		size_of::<T>() + (**self).heap()
 	}
 }
 impl<T> Data for List<T>
@@ -93,7 +93,7 @@ where
 	S: BuildHasher + Clone + Default + Send + 'static,
 {
 	fn heap(&self) -> usize {
-		self.capacity() * mem::size_of::<(K, V)>()
+		self.capacity() * size_of::<(K, V)>()
 			+ self.iter().map(|(k, v)| k.heap() + v.heap()).sum::<usize>()
 	}
 }

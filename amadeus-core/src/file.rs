@@ -157,7 +157,7 @@ impl PathBuf {
 	pub fn depth(&self) -> usize {
 		self.components.len()
 	}
-	pub fn iter<'a>(&'a self) -> impl Iterator<Item = &OsString> + 'a {
+	pub fn iter<'a>(&'a self) -> impl Iterator<Item = &'a OsString> + 'a {
 		self.components.iter()
 	}
 	pub fn display(&self) -> impl fmt::Display + '_ {

@@ -70,10 +70,10 @@ where
 {
 	futures_retry::FutureRetry::new(f, |err| match err {
 		RusotoError::HttpDispatch(_) => {
-			futures_retry::RetryPolicy::WaitRetry(std::time::Duration::from_millis(10))
+			futures_retry::RetryPolicy::WaitRetry(Duration::from_millis(10))
 		}
 		RusotoError::Unknown(response) if response.status.is_server_error() => {
-			futures_retry::RetryPolicy::WaitRetry(std::time::Duration::from_millis(10))
+			futures_retry::RetryPolicy::WaitRetry(Duration::from_millis(10))
 		}
 		e => futures_retry::RetryPolicy::ForwardError(e),
 	})

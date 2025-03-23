@@ -54,7 +54,7 @@ impl<A: Hash + Eq + Clone, C: Ord + New + for<'a> UnionAssign<&'a C> + Intersect
 		}
 	}
 	fn assert(&self) {
-		if !cfg!(feature = "assert") {
+		if !cfg!(debug_assertions) {
 			return;
 		}
 		for (k, &v) in &self.map {
