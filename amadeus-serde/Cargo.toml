@@ -35,3 +35,6 @@ recycle = "0.1"
 
 [build-dependencies]
 rustversion = "1.0"
+
+[lints.rust]
+ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }

@@ -19,7 +19,7 @@ impl<T: Ord> OrderedLinkedList<T> {
 		Self(LinkedList::new(cap))
 	}
 	fn assert(&self) {
-		if !cfg!(feature = "assert") {
+		if !cfg!(debug_assertions) {
 			return;
 		}
 		if self.0.len() <= 1 {

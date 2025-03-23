@@ -37,3 +37,6 @@ openssl = { version = "0.10", features = ["vendored"] }
 
 [build-dependencies]
 rustversion = "1.0"
+
+[lints.rust]
+ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }

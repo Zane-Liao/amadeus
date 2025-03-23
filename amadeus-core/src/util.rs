@@ -177,8 +177,8 @@ where
 pub unsafe fn transmute<A, B>(a: A) -> B {
 	use std::mem;
 	assert_eq!(
-		(mem::size_of::<A>(), mem::align_of::<A>()),
-		(mem::size_of::<B>(), mem::align_of::<B>())
+		(size_of::<A>(), align_of::<A>()),
+		(size_of::<B>(), align_of::<B>())
 	);
 	let ret = mem::transmute_copy(&a);
 	mem::forget(a);

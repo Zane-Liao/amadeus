@@ -42,7 +42,8 @@ impl<T> LinkedList<T> {
 		ret
 	}
 	fn assert(&self) {
-		if !cfg!(feature = "assert") {
+		// This file is modified from the original.
+		if !cfg!(debug_assertions) {
 			return;
 		}
 		let mut len = 0;

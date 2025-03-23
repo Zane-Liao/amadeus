@@ -5,6 +5,7 @@ use serde_closure::{traits, FnNamed};
 use std::{
 	cmp::Ordering, fmt::{self, Debug}, iter, ops
 };
+// TODO: This file is modified from the original.
 
 FnNamed! {
 	pub type NeverEqual<F, T> = |self, f: F|a=> &T, b=> &T| -> Ordering where ; where F: (for<'a> traits::Fn<(&'a T, &'a T), Output = Ordering>) {
@@ -59,7 +60,7 @@ impl<T, F> Sort<T, F> {
 		self.top.iter()
 	}
 }
-#[cfg_attr(not(nightly), serde_closure::desugar)]
+#[cfg_attr(not(feature = "nightly"), serde_closure::desugar)]
 impl<T, F> Sort<T, F>
 where
 	F: traits::Fn(&T, &T) -> Ordering,
@@ -87,7 +88,7 @@ impl<T, F> IntoIterator for Sort<T, F> {
 		self.top.into_iter()
 	}
 }
-#[cfg_attr(not(nightly), serde_closure::desugar)]
+#[cfg_attr(not(feature = "nightly"), serde_closure::desugar)]
 impl<T, F> iter::Sum<Sort<T, F>> for Option<Sort<T, F>>
 where
 	F: traits::Fn(&T, &T) -> Ordering,
@@ -103,7 +104,7 @@ where
 		Some(total)
 	}
 }
-#[cfg_attr(not(nightly), serde_closure::desugar)]
+#[cfg_attr(not(feature = "nightly"), serde_closure::desugar)]
 impl<T, F> ops::Add for Sort<T, F>
 where
 	F: traits::Fn(&T, &T) -> Ordering,
@@ -115,7 +116,7 @@ where
 		self
 	}
 }
-#[cfg_attr(not(nightly), serde_closure::desugar)]
+#[cfg_attr(not(feature = "nightly"), serde_closure::desugar)]
 impl<T, F> ops::AddAssign for Sort<T, F>
 where
 	F: traits::Fn(&T, &T) -> Ordering,
@@ -187,9 +188,9 @@ mod btree_set {
 			self.set.is_empty()
 		}
 		pub fn pop_last(&mut self) -> Option<T> {
-			#[cfg(nightly)]
+			#[cfg(feature = "nightly")]
 			return self.trivial_ord_mut().pop_last().map(|value| value.0.t);
-			#[cfg(not(nightly))]
+			#[cfg(not(feature = "nightly"))]
 			todo!();
 		}
 		fn trivial_ord_mut(&mut self) -> &mut std::collections::BTreeSet<TrivialOrd<Node<T, F>>> {
@@ -222,7 +223,7 @@ mod btree_set {
 			unsafe { mem::transmute(self.set.into_iter()) }
 		}
 	}
-	#[cfg_attr(not(nightly), serde_closure::desugar)]
+	#[cfg_attr(not(feature = "nightly"), serde_closure::desugar)]
 	impl<T, F> PartialEq<T> for BTreeSet<T, F>
 	where
 		F: traits::Fn(&T, &T) -> Ordering,
@@ -237,7 +238,7 @@ mod btree_set {
 			)
 		}
 	}
-	#[cfg_attr(not(nightly), serde_closure::desugar)]
+	#[cfg_attr(not(feature = "nightly"), serde_closure::desugar)]
 	impl<T, F> PartialOrd<T> for BTreeSet<T, F>
 	where
 		F: traits::Fn(&T, &T) -> Ordering,
@@ -281,7 +282,7 @@ mod btree_set {
 	}
 	impl<T, F: ?Sized> Node<T, F> {
 		fn new(t: T, f: &F) -> Self {
-			if mem::size_of_val(f) != 0 {
+			if size_of_val(f) != 0 {
 				panic!("Closures with nonzero size not supported");
 			}
 			Self {

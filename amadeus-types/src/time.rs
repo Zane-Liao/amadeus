@@ -296,6 +296,8 @@ impl TimeZone for ChronoTimezone {
 	fn offset_from_utc_datetime(&self, utc: &NaiveDateTime) -> Self::Offset {
 		ChronoTimezoneOffset(
 			self.0,
+			#[allow(deprecated)]
+			// Note: I turned off compile-time warnings, see below
 			FixedOffset::east(self.0.as_offset_at(&DateTime::from_chrono(
 				&chrono::DateTime::<Utc>::from_utc(*utc, Utc),
 			))),
@@ -311,6 +313,7 @@ impl Display for ChronoTimezone {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		match self.0.inner {
 			TimezoneInner::Variable(tz) => f.write_str(tz.name()),
+			#[allow(deprecated)]
 			TimezoneInner::Fixed(offset) => Display::fmt(&FixedOffset::east(offset), f),
 		}
 	}
@@ -360,6 +363,7 @@ impl Date {
 		self.date.as_days()
 	}
 	#[doc(hidden)]
+	#[allow(deprecated)]
 	pub fn from_chrono<Tz>(date: &chrono::Date<Tz>) -> Self
 	where
 		Tz: TimeZone,
@@ -373,6 +377,7 @@ impl Date {
 		.unwrap()
 	}
 	#[doc(hidden)]
+	#[allow(deprecated)]
 	pub fn as_chrono(&self) -> Option<chrono::Date<ChronoTimezone>> {
 		Some(
 			Utc.ymd(
@@ -404,7 +409,7 @@ impl Display for Date {
 }
 impl FromStr for Date {
 	type Err = ParseDateError;
-
+	#[allow(deprecated)]
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
 		chrono::DateTime::parse_from_str(s, "%Y-%m-%d%:z")
 			.map(|date| Self::from_chrono(&date.date()))
@@ -564,6 +569,7 @@ impl DateTime {
 		.unwrap()
 	}
 	#[doc(hidden)]
+	#[allow(deprecated)]
 	pub fn as_chrono(&self) -> Option<chrono::DateTime<ChronoTimezone>> {
 		Some(
 			chrono::DateTime::<Utc>::from_utc(self.date_time.as_chrono()?, Utc)
@@ -1031,6 +1037,7 @@ mod tests {
 
 	#[test]
 	fn test_convert_date_to_string() {
+		#[allow(deprecated)]
 		fn check_date_conversion(y: i32, m: u32, d: u32) {
 			let chrono_date = NaiveDate::from_ymd(y, m, d);
 			let chrono_datetime = chrono_date.and_hms(0, 0, 0);
@@ -1056,6 +1063,7 @@ mod tests {
 
 	#[test]
 	fn test_convert_time_to_string() {
+		#[allow(deprecated)]
 		fn check_time_conversion(h: u32, mi: u32, s: u32) {
 			let chrono_time = NaiveTime::from_hms(h, mi, s);
 			let time = TimeWithoutTimezone::from_chrono(&chrono_time);
@@ -1072,6 +1080,7 @@ mod tests {
 	#[test]
 	fn test_convert_timestamp_to_string() {
 		#[allow(clippy::many_single_char_names)]
+		#[allow(deprecated)]
 		fn check_datetime_conversion(y: i32, m: u32, d: u32, h: u32, mi: u32, s: u32) {
 			let dt = NaiveDate::from_ymd(y, m, d).and_hms(h, mi, s);
 			// let res = DateTimeWithoutTimezone::from_millis(dt.timestamp_millis()).to_string();

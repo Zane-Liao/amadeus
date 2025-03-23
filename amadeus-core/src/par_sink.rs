@@ -21,6 +21,9 @@ mod tuple;
 use super::par_pipe::*;
 use crate::{pipe::Sink, pool::ProcessSend};
 
+#[allow(ambiguous_glob_reexports)]
+// Notes: This module import has many problems
+// I have to disable it for now and modify it later
 pub use self::{
 	all::*, any::*, collect::*, combine::*, combiner::*, count::*, fold::*, folder::*, for_each::*, fork::*, group_by::*, histogram::*, max::*, mean::*, pipe::*, sample::*, stddev::*, sum::*, tuple::*
 };

@@ -193,3 +193,6 @@ required-features = ["bench"]
 [[bench]]
 name = "parquet"
 required-features = ["bench", "parquet"]
+
+[lints.rust]
+ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }
